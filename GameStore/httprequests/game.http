@@ -4,23 +4,12 @@ POST http://localhost:5254/games
 content-type : application/json
 
 {
-    "Id" : 6,
     "Name" : "fifa27",
     "Description" : "new relese from EA",
     "Price" : "59.99",
     "ReleaseDate" : "2026-09-01"
 }
 
-###
-Content-Type: application/json
-
-{
-    
-    "Name" : "PES26",
-    "Description" : "new relese from EA",
-    "Price" : "59.99",
-    "ReleaseDate" : "2026-09-01"
-}
 
 ###
 

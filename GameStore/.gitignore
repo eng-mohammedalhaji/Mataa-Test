@@ -8,3 +8,13 @@ obj/
 .vs/
 .idea/
 .DS_Store
+bin/
+obj/
+
+*.db
+*.db-shm
+*.db-wal
+
+.vs/
+.idea/
+.DS_Store

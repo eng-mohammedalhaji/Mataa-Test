@@ -5,6 +5,7 @@ content-type : application/json
 
 {
     "Name" : "fifa27",
+    "GenreId" : "11111111-1111-1111-1111-111111111111",
     "Description" : "new relese from EA",
     "Price" : "59.99",
     "ReleaseDate" : "2026-09-01"

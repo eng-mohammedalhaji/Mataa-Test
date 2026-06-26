@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameStore.Data.Migrations
 {
     [DbContext(typeof(GameStoreContext))]
-    [Migration("20260622085615_initialcreate")]
-    partial class initialcreate
+    [Migration("20260626194033_GameStoreDb")]
+    partial class GameStoreDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,6 +30,9 @@ namespace GameStore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("GenreId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -42,6 +45,8 @@ namespace GameStore.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenreId");
+
                     b.ToTable("Games");
 
                     b.HasData(
@@ -49,6 +54,7 @@ namespace GameStore.Data.Migrations
                         {
                             Id = 1,
                             Description = "The Legend of Zelda: Breath of the Wild",
+                            GenreId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "Action-adventure",
                             Price = 59.99m,
                             ReleaseDate = new DateTime(2017, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -57,6 +63,7 @@ namespace GameStore.Data.Migrations
                         {
                             Id = 2,
                             Description = "Red Dead Redemption 2",
+                            GenreId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "Action-adventure",
                             Price = 59.99m,
                             ReleaseDate = new DateTime(2018, 10, 26, 0, 0, 0, 0, DateTimeKind.Unspecified)
@@ -65,10 +72,44 @@ namespace GameStore.Data.Migrations
                         {
                             Id = 3,
                             Description = "Cyberpunk 2077",
+                            GenreId = new Guid("11111111-1111-1111-1111-111111111111"),
                             Name = "Action RPG",
                             Price = 59.99m,
                             ReleaseDate = new DateTime(2020, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("GameStore.Entities.Genre", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "fight games"
+                        });
+                });
+
+            modelBuilder.Entity("GameStore.Entities.Game", b =>
+                {
+                    b.HasOne("GameStore.Entities.Genre", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Genre");
                 });
 #pragma warning restore 612, 618
         }

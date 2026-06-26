@@ -28,16 +28,14 @@ public static class GameStoreEndPoint
         {
             if (context.GetById(game.Id) is not null)
             {
-                game = game with { Id = context.GetMax(game.ToEntity())!.Id + 1 };
+                game = game with { Id = context.GetMaxId(game.ToEntity())!.Value + 1 };
             }
 
             context.Add(game.ToEntity());
         });
-        gamesroute.MapPut("/{id}", (int id, GameDto updatedGame, IGameRepository context) =>
-        {
-            context.Update(id, updatedGame);
-            return Results.Ok();
-        });
+        gamesroute.MapPut("/{id}",
+            (int id, UpdateGameDto updatedGame, IGameRepository context) =>
+                context.Update(id, updatedGame) ? Results.Ok() : Results.NotFound());
         gamesroute.MapDelete("/{id}", (int id, IGameRepository context) =>
         {
             var index = context.GetById(id);

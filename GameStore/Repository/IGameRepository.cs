@@ -5,16 +5,16 @@ using Entities;
 
 public interface IGameRepository
 {
-    List<Game> GetAll();
+    List<GameSummaryDto> GetAll();
     Game? GetById(int id);
 
     Game? GetByName(String name);
 
-    Game? GetMax(Game id);
+    int? GetMaxId(Game game);
 
     void Add(Game game);
 
-    void Update(int index, GameDto updatedgame);
+    bool Update(int index, UpdateGameDto updatedgame);
     void Delete(Game game);
 }
 

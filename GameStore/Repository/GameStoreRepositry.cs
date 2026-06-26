@@ -1,4 +1,6 @@
 using GameStore.Dtos;
+using GameStore.GameStoreMapping;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace GameStore.Repository;
@@ -8,14 +10,15 @@ using Entities;
 
 public class GameStoreRepository(GameStoreContext context) : IGameRepository
 {
-    public List<Game> GetAll()
+    public List<GameSummaryDto> GetAll()
     {
-        return context.Games.ToList();
+        return context.Games.Include(g => g.Genre)
+            .Select(g => g.ToSummryDto()).ToList()!;
     }
 
     public Game? GetById(int id)
     {
-        return context.Games.FirstOrDefault(g => g.Id == id);
+        return context.Games.Find(id);
     }
 
     public Game? GetByName(String name)
@@ -23,10 +26,10 @@ public class GameStoreRepository(GameStoreContext context) : IGameRepository
         return context.Games.FirstOrDefault(game => game.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 
-    public Game? GetMax(Game game)
+    public int? GetMaxId(Game game)
 
     {
-        return context.Games.Max();
+        return context.Games.Max(g => g.Id);
     }
 
     public void Add(Game game)
@@ -35,15 +38,13 @@ public class GameStoreRepository(GameStoreContext context) : IGameRepository
         context.SaveChanges();
     }
 
-    public void Update(int index, GameDto updatedgame)
+    public bool Update(int index, UpdateGameDto updatedgame)
     {
         var game = GetById(index);
-        if (game is null) return;
-        game.Name = updatedgame.Name;
-        game.Description = updatedgame.Description;
-        game.Price = updatedgame.Price;
-        game.ReleaseDate = updatedgame.ReleaseDate;
+        if (game is null) return false;
+        context.Entry(game).CurrentValues.SetValues(updatedgame);
         context.SaveChanges();
+        return true;
     }
 
     public void Delete(Game game)
